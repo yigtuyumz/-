@@ -1,0 +1,34 @@
+CFLAGS			:=	-fdiagnostics-color=always
+CFLAGS_DEBUG	:=	-fdiagnostics-color=always
+
+# === Color codes for echo (double quotes required) ===
+COLOR_RESET		=	\033[0m
+COLOR_RED		=	\033[0;31m
+COLOR_GREEN		=	\033[0;32m
+COLOR_YELLOW	=	\033[0;33m
+COLOR_BLUE		=	\033[0;34m
+COLOR_MAGENTA	=	\033[0;35m
+COLOR_CYAN		=	\033[0;36m
+COLOR_BOLD		=	\033[1m
+
+COLOR_DONE	=	[ $(COLOR_GREEN)+$(COLOR_RESET) ]
+COLOR_WARN	=	[ $(COLOR_YELLOW)W$(COLOR_RESET) ]
+COLOR_ERR	=	[ $(COLOR_RED)E$(COLOR_RESET) ]
+COLOR_PROG	=	[ $(COLOR_MAGENTA).$(COLOR_RESET) ]
+COLOR_DBG	=	[ $(COLOR_BLUE)$(COLOR_BOLD)DBG$(COLOR_RESET) ]
+
+# === Color codes for printf (use directly with \e) ===
+PRINT_RESET		=	\e[0m
+PRINT_RED		=	\e[0;31m
+PRINT_GREEN		=	\e[0;32m
+PRINT_YELLOW	=	\e[0;33m
+PRINT_BLUE		=	\e[0;34m
+PRINT_MAGENTA	=	\e[0;35m
+PRINT_CYAN		=	\e[0;36m
+PRINT_BOLD		=	\e[1m
+
+PRINT_DONE	=	[ $(PRINT_GREEN)+$(PRINT_RESET) ]
+PRINT_WARN	=	[ $(PRINT_YELLOW)W$(PRINT_RESET) ]
+PRINT_ERR	=	[ $(PRINT_RED)E$(PRINT_RESET) ]
+PRINT_PROG	=	[ $(PRINT_MAGENTA).$(PRINT_RESET) ]
+PRINT_DBG	=	[ $(PRINT_BLUE)$(PRINT_BOLD)DBG$(PRINT_RESET) ]

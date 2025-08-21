@@ -1,0 +1,61 @@
+include Makefile.inc
+
+CC :=				clang
+CFLAGS :=			-Wall -Wextra -Werror -std=c99
+CFLAGS_DEBUG :=		-Wall -Wextra -g -std=c99
+SRCS =				$(wildcard ./*.c)
+OUT =				$(SRCS:.c=)
+BACKUP_LOC =		"$(shell realpath .)/backups"
+INDENT_BACKUPS =	$(SRCS:.c=.c.bak)
+LD =
+LDFLAGS =
+
+.SUFFIXES:
+.SILENT:	all re clean fclean debug indent_backup test $(BACKUP_LOC)
+.PHONY:		all re clean fclean debug indent_backup test
+all:
+	echo "$(COLOR_RED)TARGET ===================== $@$(COLOR_RESET)"
+re:	clean all
+	echo "$(COLOR_RED)TARGET ===================== $@$(COLOR_RESET)"
+clean:
+	echo "$(COLOR_RED)TARGET ===================== $@$(COLOR_RESET)"
+	if [ -n "$(firstword $(OUT))" ] && [ -f "$(firstword $(OUT))" ]; then						\
+		rm -rf $(OUT);																			\
+		echo "$(COLOR_DONE) Removed all executables.";											\
+	fi
+	if [ -d "$(BACKUP_LOC)" ]; then																\
+		rm -rf $(BACKUP_LOC);																	\
+		echo "$(COLOR_DONE) Removed $(COLOR_YELLOW)\`indent\`$(COLOR_RESET) backup folder.";	\
+	fi
+fclean:
+	echo "$(COLOR_RED)TARGET ===================== $@$(COLOR_RESET)"
+debug: clean indent_backup
+	echo "$(COLOR_RED)TARGET ===================== $@$(COLOR_RESET)"
+	for srcfile in $(SRCS); do																\
+		executable=$$(basename $$srcfile .c)_debug;											\
+		outfile=$$( $(CC) $(CFLAGS_DEBUG) $$srcfile -o $$executable 2>&1 );					\
+		status=$$?;																			\
+		if [ $$status -eq 0 ] && ! echo "$$outfile" | grep -q "warning:"; then				\
+			echo "$(COLOR_DONE) Built debug executable: $$executable";						\
+		else																				\
+			echo "$$outfile";																\
+			echo "$(COLOR_WARN) Warnings or errors while building executable $$executable";	\
+			exit 1;																			\
+		fi;																					\
+	done
+$(BACKUP_LOC):
+	if [ -d "$(BACKUP_LOC)" ]; then									\
+		echo "$(COLOR_WARN) Backup directory already exists.";		\
+	else															\
+		mkdir $(BACKUP_LOC);										\
+		echo "$(COLOR_DONE) Backup directory has been created.";	\
+	fi
+indent_backup: | $(BACKUP_LOC)
+	echo "$(COLOR_RED)TARGET ===================== $@$(COLOR_RESET)"
+	indent $(SRCS)
+	mv $(INDENT_BACKUPS) $(BACKUP_LOC)
+	echo "$(COLOR_DONE) The backup of all source files has been updated by the $(COLOR_YELLOW)\`indent\`$(COLOR_RESET) tool."
+test:
+	echo "$(COLOR_RED)TARGET ===================== $@$(COLOR_RESET)"
+	echo "$@"
+	echo "$(BACKUP_LOC)"
